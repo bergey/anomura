@@ -1,0 +1,6 @@
+[package]
+name = "sorting"
+version = "0.1.0"
+authors = ["Daniel Bergey <bergey@teallabs.org>"]
+
+[dependencies]
