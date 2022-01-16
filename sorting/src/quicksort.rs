@@ -1,26 +1,30 @@
-fn quicksort(a : &mut [i32]) {
+fn quicksort(a: &mut [i32]) {
     if a.len() > 1 {
         let q = partition(a);
-        if q > 0 { quicksort(&mut a[..q]); }
-        if q < a.len() { quicksort(&mut a[q+1..]); }
+        if q > 0 {
+            quicksort(&mut a[..q]);
+        }
+        if q < a.len() {
+            quicksort(&mut a[q + 1..]);
+        }
     }
 }
 
-fn partition(a : &mut [i32]) -> usize {
+fn partition(a: &mut [i32]) -> usize {
     let last = a.len() - 1;
     let x = a[last];
     let mut i = 0;
-    for j in 0..(a.len()-1) {
+    for j in 0..(a.len() - 1) {
         if a[j] <= x {
             a.swap(i, j);
-            i = i+1;
+            i = i + 1;
         }
     }
     a.swap(i, last);
     i
 }
 
-fn hoare_partition(a: &mut[i32]) -> usize {
+fn hoare_partition(a: &mut [i32]) -> usize {
     let x = a[0];
     let mut i = 0;
     let mut j = a.len() - 1;
@@ -39,18 +43,22 @@ fn hoare_partition(a: &mut[i32]) -> usize {
     }
 }
 
-fn hoare_quicksort(a : &mut[i32]) {
+fn hoare_quicksort(a: &mut [i32]) {
     if a.len() > 1 {
         let q = hoare_partition(a);
-        if q > 0 { hoare_quicksort(&mut a[..q]); }
-        if q < a.len() { hoare_quicksort(&mut a[q+1..]); }
+        if q > 0 {
+            hoare_quicksort(&mut a[..q]);
+        }
+        if q < a.len() {
+            hoare_quicksort(&mut a[q + 1..]);
+        }
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn quicksort_already_sorted() {
         let mut sorted = vec![1, 2, 3];
