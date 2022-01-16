@@ -1,4 +1,4 @@
-fn quicksort(a: &mut [i32]) {
+pub fn quicksort(a: &mut [i32]) {
     if a.len() > 1 {
         let q = partition(a);
         if q > 0 {
@@ -17,7 +17,7 @@ fn partition(a: &mut [i32]) -> usize {
     for j in 0..(a.len() - 1) {
         if a[j] <= x {
             a.swap(i, j);
-            i = i + 1;
+            i += 1;
         }
     }
     a.swap(i, last);
@@ -30,10 +30,10 @@ fn hoare_partition(a: &mut [i32]) -> usize {
     let mut j = a.len() - 1;
     loop {
         while a[j] > x {
-            j = j - 1;
+            j -= 1;
         }
         while a[i] < x {
-            i = i + 1;
+            i += 1;
         }
         if i < j {
             a.swap(i, j);
@@ -43,7 +43,7 @@ fn hoare_partition(a: &mut [i32]) -> usize {
     }
 }
 
-fn hoare_quicksort(a: &mut [i32]) {
+pub fn hoare_quicksort(a: &mut [i32]) {
     if a.len() > 1 {
         let q = hoare_partition(a);
         if q > 0 {

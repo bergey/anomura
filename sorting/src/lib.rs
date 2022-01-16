@@ -1,3 +1,3 @@
-mod insertion;
-mod merge;
-mod quicksort;
+pub mod quicksort;
+pub mod insertion;
+pub mod merge;

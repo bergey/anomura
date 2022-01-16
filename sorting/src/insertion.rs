@@ -1,4 +1,4 @@
-fn insertion(mut v: Vec<i32>) -> Vec<i32> {
+pub fn insertion(mut v: Vec<i32>) -> Vec<i32> {
     let mut j = 1;
     while j < v.len() {
         // insert v[j] into position
