@@ -1,29 +1,19 @@
 #![feature(test)]
 pub fn generate_parenthesis(n: i32) -> Vec<String> {
     let mut s = Vec::new();
-    parens_with_prefix(n, &mut s)
+    parens_with_prefix(n, &mut s, 0, 0)
 }
 
-fn parens_with_prefix(n: i32, prefix: &mut Vec<u8>) -> Vec<String> {
-    // eventually pass these in, but we can calculate from prefix
-    let mut lefts = 0;
-    let mut rights = 0;
-    for c in prefix.iter() {
-        match c {
-            b'(' => lefts += 1,
-            b')' => rights += 1,
-            _ => (),
-        };
-    }
+fn parens_with_prefix(n: i32, prefix: &mut Vec<u8>, lefts: i32, rights: i32) -> Vec<String> {
     let mut ret = Vec::new();
     if lefts < n {
         prefix.push(b'(');
-        ret.extend(parens_with_prefix(n, prefix));
+        ret.extend(parens_with_prefix(n, prefix, lefts + 1, rights));
         prefix.pop();
     }
     if rights < lefts {
         prefix.push(b')');
-        ret.extend(parens_with_prefix(n, prefix));
+        ret.extend(parens_with_prefix(n, prefix, lefts, rights + 1));
         prefix.pop();
     }
     if lefts == n && rights == n {
@@ -67,5 +57,4 @@ mod test {
     fn bench_eight(b: &mut Bencher) {
         b.iter(|| generate_parenthesis(8))
     }
-
 }
