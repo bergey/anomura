@@ -1,27 +1,33 @@
 #![feature(test)]
 pub fn generate_parenthesis(n: i32) -> Vec<String> {
     let mut s = Vec::new();
-    parens_with_prefix(n, &mut s, 0, 0)
+    let mut ret = Vec::new();
+    parens_with_prefix(&mut ret, n, &mut s, 0, 0);
+    ret
 }
 
-fn parens_with_prefix(n: i32, prefix: &mut Vec<u8>, lefts: i32, rights: i32) -> Vec<String> {
-    let mut ret = Vec::new();
+fn parens_with_prefix(
+    results: &mut Vec<String>,
+    n: i32,
+    prefix: &mut Vec<u8>,
+    lefts: i32,
+    rights: i32,
+) {
     if lefts < n {
         prefix.push(b'(');
-        ret.extend(parens_with_prefix(n, prefix, lefts + 1, rights));
+        parens_with_prefix(results, n, prefix, lefts + 1, rights);
         prefix.pop();
     }
     if rights < lefts {
         prefix.push(b')');
-        ret.extend(parens_with_prefix(n, prefix, lefts, rights + 1));
+        parens_with_prefix(results, n, prefix, lefts, rights + 1);
         prefix.pop();
     }
     if lefts == n && rights == n {
         unsafe {
-            ret.push(String::from_utf8_unchecked(prefix.clone()));
+            results.push(String::from_utf8_unchecked(prefix.clone()));
         }
     }
-    ret
 }
 
 #[cfg(test)]
@@ -56,5 +62,15 @@ mod test {
     #[bench]
     fn bench_eight(b: &mut Bencher) {
         b.iter(|| generate_parenthesis(8))
+    }
+
+    #[bench]
+    fn bench_nine(b: &mut Bencher) {
+        b.iter(|| generate_parenthesis(9))
+    }
+
+    #[bench]
+    fn bench_ten(b: &mut Bencher) {
+        b.iter(|| generate_parenthesis(10))
     }
 }
