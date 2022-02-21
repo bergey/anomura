@@ -1,14 +1,14 @@
 #![feature(test)]
 pub fn generate_parenthesis(n: i32) -> Vec<String> {
-    let s = Vec::new();
-    parens_with_prefix(n, &s)
+    let mut s = Vec::new();
+    parens_with_prefix(n, &mut s)
 }
 
-fn parens_with_prefix(n: i32, prefix: &[u8]) -> Vec<String> {
+fn parens_with_prefix(n: i32, prefix: &mut Vec<u8>) -> Vec<String> {
     // eventually pass these in, but we can calculate from prefix
     let mut lefts = 0;
     let mut rights = 0;
-    for c in prefix {
+    for c in prefix.iter() {
         match c {
             b'(' => lefts += 1,
             b')' => rights += 1,
@@ -17,22 +17,18 @@ fn parens_with_prefix(n: i32, prefix: &[u8]) -> Vec<String> {
     }
     let mut ret = Vec::new();
     if lefts < n {
-        let mut s = Vec::new();
-        s.extend(prefix);
-        s.push(b'(');
-        ret.extend(parens_with_prefix(n, &s));
+        prefix.push(b'(');
+        ret.extend(parens_with_prefix(n, prefix));
+        prefix.pop();
     }
     if rights < lefts {
-        let mut s = Vec::new();
-        s.extend(prefix);
-        s.push(b')');
-        ret.extend(parens_with_prefix(n, &s));
+        prefix.push(b')');
+        ret.extend(parens_with_prefix(n, prefix));
+        prefix.pop();
     }
     if lefts == n && rights == n {
-        let mut s = Vec::new();
-        s.extend(prefix);
         unsafe {
-            ret.push(String::from_utf8_unchecked(s));
+            ret.push(String::from_utf8_unchecked(prefix.clone()));
         }
     }
     ret
