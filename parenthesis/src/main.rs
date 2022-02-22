@@ -1,33 +1,42 @@
 #![feature(test)]
 pub fn generate_parenthesis(n: i32) -> Vec<String> {
-    let mut s = Vec::new();
-    let mut ret = Vec::new();
-    parens_with_prefix(&mut ret, n, &mut s, 0, 0);
-    ret
-}
+    let mut prefix = Vec::new();
+    let mut results = Vec::new();
+    let mut lefts = 0;
+    let mut rights = 0;
 
-fn parens_with_prefix(
-    results: &mut Vec<String>,
-    n: i32,
-    prefix: &mut Vec<u8>,
-    lefts: i32,
-    rights: i32,
-) {
-    if lefts < n {
-        prefix.push(b'(');
-        parens_with_prefix(results, n, prefix, lefts + 1, rights);
-        prefix.pop();
-    }
-    if rights < lefts {
-        prefix.push(b')');
-        parens_with_prefix(results, n, prefix, lefts, rights + 1);
-        prefix.pop();
-    }
-    if lefts == n && rights == n {
-        unsafe {
-            results.push(String::from_utf8_unchecked(prefix.clone()));
+    'outer: loop {
+        if lefts < n {
+            prefix.push(b'(');
+            lefts += 1;
+        } else if rights < lefts {
+            prefix.push(b')');
+            rights += 1;
+        } else if lefts == n && rights == n {
+            unsafe {
+                results.push(String::from_utf8_unchecked(prefix.clone()));
+            }
+            // backtrack / unwind
+            while let Some(c) = prefix.pop() {
+                match c {
+                    b')' => rights -= 1,
+                    b'(' => {
+                        lefts -= 1;
+                        if lefts > rights {
+                            prefix.push(b')');
+                            rights += 1;
+                            break;
+                        } else if lefts == 0 { // popped first paren
+                            break 'outer;
+                        } // else prefix is balanced, keep backtracking
+                    },
+                    _ => panic!("paren stack has non-paren byte"),
+                }
+            }
         }
     }
+
+    results
 }
 
 #[cfg(test)]
